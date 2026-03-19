@@ -1,68 +1,39 @@
-let xp = localStorage.getItem("xp") || 0;
-let nivel = localStorage.getItem("nivel") || 1;
-let usos = localStorage.getItem("usos") || 0;
-let fecha = localStorage.getItem("fecha") || "";
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GoalAI</title>
+  <style>
+    body { font-family: Arial; text-align:center; background:#1e1e2f; color:#fff; }
+    button { padding:10px 20px; font-size:18px; margin:10px; cursor:pointer; }
+    .xp { font-size:20px; margin:15px; }
+    .message { margin:20px; font-size:18px; color:#ffcc00; }
+    #popup { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    #popup span { position:absolute; top:20px; right:20px; font-size:24px; cursor:pointer; color:#fff; }
+    #metaForm { display:none; flex-direction:column; align-items:center; }
+    input { margin:10px; padding:8px; font-size:16px; width:200px; }
+  </style>
+</head>
+<body>
 
-let hoy = new Date().toDateString();
-if(fecha !== hoy){
-  usos = 0;
-  localStorage.setItem("fecha", hoy);
-}
+<h1>GoalAI</h1>
 
-let premium = false;
+<div id="popup">
+  <span id="cerrar">X</span>
+  <h2>Gratis vs Premium</h2>
+  <p>Gratis: 1 meta, IA limitada</p>
+  <p>Premium: metas ilimitadas, IA ilimitada</p>
+  <button id="premium">Hazte Premium</button>
+</div>
 
-document.getElementById("cerrar").onclick = () => {
-  document.getElementById("popup").style.display = "none";
-  document.getElementById("metaForm").style.display = "flex";
-};
+<div class="xp">Nivel: <span id="nivel">1</span> | XP: <span id="xp">0</span></div>
+<div class="message" id="mensaje">Empieza tu primera meta 🔥</div>
 
-document.getElementById("premium").onclick = () => {
-  premium = true;
-  alert("Ahora eres premium 🔥");
-  document.getElementById("popup").style.display = "none";
-  document.getElementById("metaForm").style.display = "flex";
-};
+<form id="metaForm">
+  <input type="text" id="meta" placeholder="Tu meta" required>
+  <input type="number" id="tiempo" placeholder="Minutos diarios" required>
+  <button type="submit">Generar plan</button>
+</form>
 
-function actualizar(){
-  document.getElementById("xp").innerText = xp;
-  document.getElementById("nivel").innerText = nivel;
-}
-
-document.getElementById("metaForm").addEventListener("submit", function(e){
-  e.preventDefault();
-
-  let meta = document.getElementById("meta").value;
-  let tiempo = document.getElementById("tiempo").value;
-
-  if(!premium && usos >= 1){
-    document.getElementById("mensaje").innerText = "Solo 1 meta en versión gratis 😈";
-    return;
-  }
-
-  usos++;
-  localStorage.setItem("usos", usos);
-
-  xp = parseInt(xp) + 50;
-
-  if(xp >= nivel * 200){
-    nivel++;
-    document.getElementById("mensaje").innerText = "Subiste de nivel 🔥";
-  } else {
-    document.getElementById("mensaje").innerText =
-      premium
-      ? `Plan PRO: ${meta}, ${tiempo} min diarios`
-      : `Plan básico: ${meta}, ${tiempo} min diarios`;
-  }
-
-  localStorage.setItem("xp", xp);
-  localStorage.setItem("nivel", nivel);
-
-  actualizar();
-
-  document.body.style.background = "#2ecc71";
-  setTimeout(() => {
-    document.body.style.background = "#1e1e2f";
-  }, 200);
-});
-
-actualizar();
+<script src="script.js"></script>
+</body>
+</html>
